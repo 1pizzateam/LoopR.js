@@ -1,20 +1,27 @@
 {
-  "name": "@lcluber/frameratjs",
-  "version": "1.1.0",
+  "name": "@1pizzateam/loopr",
+  "version": "2.0.0",
   "description": "Animation frame request library",
   "keywords": [
     "animation frame request"
   ],
-  "homepage": "https://github.com/LCluber/FrameRat.js.git",
-  "main": "dist/framerat",
-  "types": "dist/framerat",
+  "homepage": "https://github.com/1pizzateam/LoopR.js",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/loopr.js",
+  "types": "dist/loopr.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/loopr.d.ts",
+      "import": "./dist/loopr.js"
+    }
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LCluber/FrameRat.js.git"
+    "url": "git+https://github.com/1pizzateam/LoopR.js.git"
   },
   "bugs": {
-    "url": "https://github.com/LCluber/FrameRat.js/issues",
-    "email": ""
+    "url": "https://github.com/1pizzateam/LoopR.js/issues"
   },
   "license": "MIT",
   "author": {
@@ -24,34 +31,31 @@
   },
   "contributors": [],
   "scripts": {
-    "start": "",
-    "build": "npm run clean && tsc && npm run rollup && npm run uglify && npm run declaration && npm run banner",
-    "clean": "rimraf dist/* build/*",
-    "rollup": "rollup --config && rollup --config rollup.config.iife.js",
-    "uglify": "uglifyjs build/framerat.iife.js --config-file uglify.config.json --output build/framerat.iife.min.js",
-    "declaration": "cat license.js build/player.d.ts build/clock.d.ts > dist/framerat.d.ts",
-    "banner": "cat license.js build/framerat.js > dist/framerat.js && cat license.js build/framerat.iife.js > dist/framerat.iife.js && cat license.js build/framerat.iife.min.js > dist/framerat.iife.min.js",
-    "test": "jest --coverage"
+    "prebuild": "npm install",
+    "build": "npm run build:lib && npm run test",
+    "build:lib": "node ./scripts/clear.js && tsc && npm run rollup && node ./scripts/copy.js",
+    "rollup": "rollup --config rollup.config.mjs",
+    "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js --coverage"
   },
   "files": [
     "dist/"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 22"
+  },
   "dependencies": {
-    "@dwtechs/checkhard": "2.16",
-    "@lcluber/type6js": "2.0.1"
+    "@dwtechs/checkard": "3.7.0",
+    "@1pizzateam/spock": "4.0.0"
   },
   "devDependencies": {
-    "@babel/core": "7.6.0",
-    "@babel/preset-env": "7.6.0",
-    "babel-jest": "24.9.0",
-    "jest": "24.9.0",
-    "jest-extended": "0.11.2",
-    "rimraf": "3.0.0",
-    "rollup": "1.25.0",
-    "rollup-plugin-babel": "4.3.3",
-    "rollup-plugin-node-resolve": "5.2.0",
-    "tslint": "6.1.2",
-    "typescript": "3.9.2",
-    "uglify-js": "3.9.3"
+    "@types/jest": "29.5.14",
+    "@types/node": "26.4.1",
+    "jest": "29.7.0",
+    "rollup": "4.63.1",
+    "rollup-plugin-dts": "6.5.1",
+    "typescript": "6.0.3"
   }
 }

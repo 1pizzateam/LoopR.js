@@ -1,12 +1,7 @@
-
-'use strict';
-
-function timer(callback) {
-  console.log('Ready....go!');
+export function timer(callback) {
   setTimeout(() => {
-    console.log("Time's up -- stop!");
-    callback && callback();
+    if (callback) {
+      callback();
+    }
   }, 1000);
 }
-
-module.exports = timer;

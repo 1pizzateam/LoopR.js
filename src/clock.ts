@@ -1,11 +1,11 @@
-import { Time, NumArray } from '@lcluber/type6js';
+import { Time, NumArray } from '@1pizzateam/spock';
 
 export class Clock {
 
-  public ticks            : number;
-  public total            : number;
-  public delta            : number;
-  private now             : number;
+  public ticks            : number = 0;
+  public total            : number = 0;
+  public delta            : number = 0;
+  private now             : number = 0;
   private fpsArrayLength  : number = 60;
   private fpsArray        : Array<number> = Array(this.fpsArrayLength);
 
@@ -22,22 +22,23 @@ export class Clock {
   }
 
   public start(): void {
-    this.now = performance.now();
+    this.now = typeof performance !== 'undefined' ? performance.now() : Date.now();
   }
 
   public tick(now: number): void {
     this.now = now;
     this.total += this.delta;
-    this.fpsArray[this.ticks % 60] = Time.millisecToFps(this.delta);
+    this.fpsArray[this.ticks % this.fpsArrayLength] = Time.millisecToFps(this.delta);
     this.ticks++;
   }
 
   public computeDelta(now: number): number {
-    return this.delta = now - this.now;
+    this.delta = now - this.now;
+    return this.delta;
   }
 
   public computeAverageFPS(): number {
-    return NumArray.average(this.fpsArray, this.fpsArrayLength);
+    return NumArray.average(this.fpsArray);
   }
 
 }

@@ -1,48 +1,55 @@
-import { Time } from '@lcluber/type6js';
-import { isNumber } from '@dwtechs/checkhard';
+import { Time } from '@1pizzateam/spock';
+import { isNumber } from '@dwtechs/checkard';
 import { Clock } from './clock';
+
+export type PlayerCallback = (delta?: number) => boolean | void;
 
 export class Player {
 
   private clock               : Clock;
   public frameId              : number;
-  private callback            : Function;
-  private frameMinDuration    : number; //cap frame rate.
-  private active              : boolean
+  private callback            : PlayerCallback;
+  private frameMinDuration    : number; // cap frame rate
+  private active              : boolean;
 
-  constructor(callback: Function) {
+  constructor(callback: PlayerCallback) {
     this.frameId          = 0;
     this.frameMinDuration = 0;
     this.clock            = new Clock();
     this.callback         = callback;
     this.active           = false;
+    this.computeNewFrame  = this.computeNewFrame.bind(this);
   }
 
   public capFPS(maxFPS: number): void {
-    this.frameMinDuration = isNumber(maxFPS) ? Time.fpsToMillisec(maxFPS) : this.frameMinDuration;
+    this.frameMinDuration = isNumber(maxFPS, true, '>=', 0) ? Time.fpsToMillisec(maxFPS) : this.frameMinDuration;
   }
 
-  // get duration of the current frame
-  public getTick():number {
+  // get duration of the current frame in seconds
+  public getTick(): number {
     return Time.millisecToSec(this.clock.delta);
   }
 
   // Get Total time elapsed in seconds
-  public getTime():number {
+  public getTime(): number {
     return Time.millisecToSec(this.clock.total);
   }
 
   // Get Frame per Second 
-  public getFPS():number {
+  public getFPS(): number {
     return this.clock.computeAverageFPS();
   }
 
   // Get total ticks elapsed
-  public getTicks():number {
+  public getTicks(): number {
     return this.clock.ticks;
   }
 
-  public setScope(scope: Object): void {
+  public isActive(): boolean {
+    return this.active;
+  }
+
+  public setScope(scope: object): void {
     this.callback = this.callback.bind(scope);
   }
 
@@ -55,9 +62,8 @@ export class Player {
   }
 
   public toggle(): boolean {
-    if (this.start()) {
+    if (this.start())
       return true;
-    }
     this.pause();
     return false;
   }
@@ -72,38 +78,54 @@ export class Player {
 
   public stop(): void {
     this.clock.reset();
-    if (this.active) {
+    if (this.active)
       this.stopAnimation();
-    }
   }
 
   private computeNewFrame(now: number): void {
     const delta = this.clock.computeDelta(now);
     if (!this.frameMinDuration || delta >= this.frameMinDuration) {
       this.clock.tick(now);
-      if (this.callback() === false) { // a callback that returns false will stop the animation
+      if (this.callback(this.getTick()) === false)
         return this.stop();
-      }
     } 
     this.requestNewFrame();
   }
 
-  private startAnimation() : void {
+  private startAnimation(): void {
+    this.active = true;
     this.clock.start();
-    this.toggleActive();
     this.requestNewFrame();
   }
 
   private stopAnimation(): void {
-    this.toggleActive();
-    window.cancelAnimationFrame(this.frameId);
+    this.active = false;
+    this.cancelFrame();
+    this.frameId = 0;
   }
 
   private requestNewFrame(): void {
-    this.frameId = window.requestAnimationFrame(this.computeNewFrame.bind(this));
+    const raf = typeof window !== 'undefined' && window.requestAnimationFrame
+      ? window.requestAnimationFrame.bind(window)
+      : typeof requestAnimationFrame !== 'undefined'
+        ? requestAnimationFrame
+        : null;
+
+    if (raf) {
+      this.frameId = raf(this.computeNewFrame);
+    }
   }
 
-  private toggleActive() {
-    this.active = !this.active;
+  private cancelFrame(): void {
+    const caf = typeof window !== 'undefined' && window.cancelAnimationFrame
+      ? window.cancelAnimationFrame.bind(window)
+      : typeof cancelAnimationFrame !== 'undefined'
+        ? cancelAnimationFrame
+        : null;
+
+    if (caf) {
+      caf(this.frameId);
+    }
   }
+
 }

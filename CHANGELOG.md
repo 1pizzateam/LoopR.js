@@ -1,3 +1,18 @@
+Version 2.0.0 (September 12th 2026)
+-----------------------------
+ * Library rebranded and modernized as @1pizzateam/loopr
+ * Exported as native ES module with TypeScript declarations
+ * Upgraded dependencies to @dwtechs/checkard (3.7.0) and @1pizzateam/spock (4.0.0)
+ * Optimized rendering performance by pre-binding animation frame handler to eliminate per-frame GC heap allocations
+ * Added safe fallback for window/requestAnimationFrame to support SSR, Web Workers, and Node.js
+ * Added isActive() method to Player to query loop state
+ * Exported PlayerCallback type with optional delta parameter
+ * Passed current delta in seconds to the callback function
+ * Added validation to capFPS() to prevent negative framerate durations
+ * Fixed hardcoded buffer length modulo in Clock.tick()
+ * Reset frameId to 0 upon animation cancellation
+ * Modernized testing infrastructure with Jest ESM and 100% test coverage
+
 Version 1.1.0 (October 2nd 2021)
 -----------------------------
  * Better API methods names

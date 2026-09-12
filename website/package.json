@@ -1,0 +1,26 @@
+{
+  "name": "loopr-docs",
+  "version": "2.0.0",
+  "description": "Documentation for LoopR.js.",
+  "private": true,
+  "scripts": {
+    "dev": "vitepress dev docs --host",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  },
+  "author": "Ludovic Cluber",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/1pizzateam/LoopR.js.git",
+    "directory": "website"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "vitepress": "1.6.4"
+  },
+  "dependencies": {
+    "@1pizzateam/spock": "4.0.0",
+    "@dwtechs/checkard": "3.7.0"
+  }
+}
