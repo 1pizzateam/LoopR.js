@@ -86,8 +86,10 @@ export class Player {
     const delta = this.clock.computeDelta(now);
     if (!this.frameMinDuration || delta >= this.frameMinDuration) {
       this.clock.tick(now);
-      if (this.callback(this.getTick()) === false)
-        return this.stop();
+      if (this.callback(this.getTick()) === false) {
+        this.stop();
+        return;
+      }
     } 
     this.requestNewFrame();
   }
@@ -111,9 +113,8 @@ export class Player {
         ? requestAnimationFrame
         : null;
 
-    if (raf) {
+    if (raf)
       this.frameId = raf(this.computeNewFrame);
-    }
   }
 
   private cancelFrame(): void {
@@ -123,9 +124,8 @@ export class Player {
         ? cancelAnimationFrame
         : null;
 
-    if (caf) {
+    if (caf)
       caf(this.frameId);
-    }
   }
 
 }
