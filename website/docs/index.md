@@ -4,7 +4,7 @@ layout: home
 hero:
   name: LoopR.js
   text: Animation Loops for JavaScript
-  tagline: A lightweight animation frame request library for handling smooth rendering loops with a built-in high precision clock.
+  tagline: A lightweight animation and render loop manager with built-in high precision clock and FPS capping.
   actions:
     - theme: brand
       text: Get Started

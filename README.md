@@ -5,7 +5,7 @@
 
 ## Synopsis
 
-[LoopR.js](https://github.com/1pizzateam/LoopR.js) is an open source animation frame request library written in TypeScript.
+[LoopR.js](https://github.com/1pizzateam/LoopR.js) is a lightweight animation and render loop manager written in TypeScript, featuring playback controls, FPS capping, and a high-precision delta clock.
 
 - Very lightweight
 - Thoroughly tested

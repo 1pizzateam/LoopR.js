@@ -1,9 +1,18 @@
 {
   "name": "@1pizzateam/loopr",
   "version": "2.0.0",
-  "description": "Animation frame request library",
+  "description": "Lightweight animation loop manager with FPS capping and delta-time clock",
   "keywords": [
-    "animation frame request"
+    "animation",
+    "loop",
+    "game-loop",
+    "render-loop",
+    "requestanimationframe",
+    "clock",
+    "delta-time",
+    "fps",
+    "framerate",
+    "typescript"
   ],
   "homepage": "https://github.com/1pizzateam/LoopR.js",
   "type": "module",

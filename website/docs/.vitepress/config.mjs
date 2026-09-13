@@ -32,7 +32,7 @@ const alias = {
 
 export default defineConfig({
   title: 'LoopR.js',
-  description: 'Animation frame request library for smooth rendering loops.',
+  description: 'Lightweight animation and render loop manager with FPS capping and delta-time clock.',
   base,
   cleanUrls: true,
   vite: {
