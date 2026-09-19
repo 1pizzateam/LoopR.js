@@ -4,7 +4,7 @@ Live interactive examples running `@1pizzateam/loopr` directly in your browser.
 
 ## Frame Rate Capping
 
-Throttles the render loop to a target maximum framerate using `player.capFPS(maxFPS)`. Notice how motion remains temporally smooth while CPU workload and draw cycles are throttled.
+Throttles the render loop to a target maximum framerate using `player.capFPS(maxFPS)`. Notice how motion remains temporally smooth while CPU workload and draw cycles are throttled. A dynamic jitter tolerance buffer ensures target framerates (like 15, 30, or 60 FPS) cleanly lock without dropping into harmonic sub-multiples caused by browser timer fluctuations.
 
 <FpsCapDemo />
 

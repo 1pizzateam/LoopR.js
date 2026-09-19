@@ -11,12 +11,14 @@ export class Player {
   private callback            : PlayerCallback;
   private frameMinDuration    : number; // cap frame rate
   private frameMaxDuration    : number; // cap maximum frame duration (lag spikes)
+  private frameTolerance      : number; // jitter tolerance for frame rate capping
   private active              : boolean;
 
   constructor(callback: PlayerCallback) {
     this.frameId          = 0;
     this.frameMinDuration = 0;
     this.frameMaxDuration = 0;
+    this.frameTolerance   = 0;
     this.clock            = new Clock();
     this.callback         = callback;
     this.active           = false;
@@ -24,7 +26,10 @@ export class Player {
   }
 
   public capFPS(maxFPS: number): void {
-    this.frameMinDuration = isNumber(maxFPS, true, '>=', 0) ? Time.fpsToMillisec(maxFPS) : this.frameMinDuration;
+    if (isNumber(maxFPS, true, '>=', 0)) {
+      this.frameMinDuration = Time.fpsToMillisec(maxFPS);
+      this.frameTolerance   = this.frameMinDuration ? Math.min(4, this.frameMinDuration * 0.2) : 0;
+    }
   }
 
   public capDelta(maxDeltaSec: number): void {
@@ -85,7 +90,7 @@ export class Player {
   private computeNewFrame(now: number): void {
     if (!this.active) return;
     const delta = this.clock.computeDelta(now, this.frameMaxDuration);
-    if (!this.frameMinDuration || delta >= this.frameMinDuration) {
+    if (!this.frameMinDuration || delta >= this.frameMinDuration - this.frameTolerance) {
       this.clock.tick(now);
       if (this.callback(this.getTick()) === false) {
         this.stop();

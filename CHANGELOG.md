@@ -6,6 +6,7 @@ Version 2.1.0 (September 19th 2026)
     * Standardized monotonic timing with `Time.now()` from `@1pizzateam/spock`
     * Added optional `maxDelta` clamping in `computeDelta()` using `Time.clampDelta()`
  * Player:
+    * Added dynamic jitter tolerance buffer to `capFPS()` to absorb browser/display scheduling fluctuations and reliably hit target frame rates (preventing harmonic VSync drops to 24 or 45 FPS)
     * Added `capDelta(maxSeconds)` to clamp maximum delta time and protect animations/simulations from lag spikes and tab switching
     * Zero-allocation animation frame dispatch (removed per-call `.bind(window)` in `requestNewFrame()` and `cancelFrame()`)
     * Added guard clause to `computeNewFrame()` to immediately ignore ticks when stopped/inactive

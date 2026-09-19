@@ -91,6 +91,10 @@ player.start();
 player.capFPS(0);
 ```
 
+::: tip Jitter Tolerance Buffer
+Browsers only invoke `requestAnimationFrame` on hardware VSync pulses, which fluctuate slightly due to OS scheduling jitter. `capFPS()` automatically applies a dynamic jitter tolerance buffer (up to 4ms) so that target frame rates (such as 30 FPS or 60 FPS) reliably lock to the expected rate without dropping into harmonic sub-multiples (e.g. 24 or 45 FPS).
+:::
+
 ---
 
 ## Player.capDelta()

@@ -118,6 +118,20 @@ describe('Player', () => {
     expect(player.getTicks()).toBe(1);
   });
 
+  it('should execute frame if delta is within jitter tolerance of frameMinDuration when capped', () => {
+    player.capFPS(30);
+    player.start();
+    const frameId = player.frameId;
+    const rafCb = rafCallbacks.get(frameId);
+
+    // 31ms is slightly under 33.33ms but within the jitter tolerance threshold (~29.33ms)
+    jest.spyOn(player['clock'], 'computeDelta').mockReturnValue(31);
+    rafCb(100);
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(player.getTicks()).toBe(1);
+  });
+
   it('should report active state with isActive', () => {
     expect(player.isActive()).toBe(false);
     player.start();
