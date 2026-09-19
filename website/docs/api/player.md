@@ -14,6 +14,10 @@ const player = new Player((delta) => {
 player.start();
 ```
 
+## Properties
+
+- `frameId` — `number`. The numeric ID returned by the current `requestAnimationFrame` call (default `0` when inactive).
+
 ---
 
 ## Constructor
@@ -85,6 +89,38 @@ player.start();
 
 // Later, uncap to run at full display refresh rate
 player.capFPS(0);
+```
+
+---
+
+## Player.capDelta()
+
+Clamp the maximum frame duration (in seconds) passed to the callback to protect against lag spikes and tab switching.
+
+```typescript
+capDelta(maxSeconds: number): void
+```
+
+### Parameters
+
+- `maxSeconds` — `number`. Maximum allowed duration in seconds (e.g. `0.1` for 100ms). Pass `0` to remove the clamp.
+
+### Returns
+
+`void`
+
+### Example
+
+```javascript
+import { Player } from '@1pizzateam/loopr';
+
+const player = new Player((delta) => {
+  physics.update(delta);
+});
+
+// Clamp maximum delta to 100ms (0.1s) to prevent physics tunneling during lag spikes
+player.capDelta(0.1);
+player.start();
 ```
 
 ---

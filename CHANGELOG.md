@@ -1,3 +1,17 @@
+Version 2.1.0 (September 19th 2026)
+-----------------------------
+ * Clock:
+    * Switched to `RollingAverage` from `@1pizzateam/spock` for $O(1)$ running average calculation without per-frame re-summation
+    * Eliminated initial 60 FPS startup bias in `computeAverageFPS()`
+    * Standardized monotonic timing with `Time.now()` from `@1pizzateam/spock`
+    * Added optional `maxDelta` clamping in `computeDelta()` using `Time.clampDelta()`
+ * Player:
+    * Added `capDelta(maxSeconds)` to clamp maximum delta time and protect animations/simulations from lag spikes and tab switching
+    * Zero-allocation animation frame dispatch (removed per-call `.bind(window)` in `requestNewFrame()` and `cancelFrame()`)
+    * Added guard clause to `computeNewFrame()` to immediately ignore ticks when stopped/inactive
+ * Dependencies:
+    * Upgraded `@1pizzateam/spock` to version 4.1.0
+
 Version 2.0.0 (September 12th 2026)
 -----------------------------
  * Library rebranded and modernized as @1pizzateam/loopr

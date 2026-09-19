@@ -1,6 +1,5 @@
 [![License: MIT](https://img.shields.io/npm/l/@1pizzateam/loopr.svg)](https://opensource.org/licenses/MIT)
 [![npm version](https://badge.fury.io/js/%401pizzateam%2Floopr.svg)](https://www.npmjs.com/package/@1pizzateam/loopr)
-[![minified size](https://img.shields.io/bundlephobia/min/@1pizzateam/loopr)](https://www.npmjs.com/package/@1pizzateam/loopr)
 ![Jest:coverage](https://img.shields.io/badge/Jest:coverage-100%25-brightgreen.svg)
 
 ## Synopsis

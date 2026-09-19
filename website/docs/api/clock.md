@@ -148,16 +148,17 @@ requestAnimationFrame(loop);
 Calculate the delta time in milliseconds between the given timestamp and the previous recorded timestamp.
 
 ```typescript
-computeDelta(now: number): number
+computeDelta(now: number, maxDelta?: number): number
 ```
 
 ### Parameters
 
-- `now` — `number`. Current timestamp in milliseconds (typically from `performance.now()` or `requestAnimationFrame` callback).
+- `now` — `number`. Current timestamp in milliseconds (typically from `Time.now()` or `requestAnimationFrame` callback).
+- `maxDelta` — `number`. Optional maximum allowed delta duration in milliseconds to clamp lag spikes.
 
 ### Returns
 
-`number` — Elapsed duration in milliseconds since the last tick or start.
+`number` — Elapsed (and optionally clamped) duration in milliseconds since the last tick or start.
 
 ### Example
 

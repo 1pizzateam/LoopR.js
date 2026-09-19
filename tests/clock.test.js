@@ -27,9 +27,17 @@ describe('Clock', () => {
     expect(clock.total).toBeCloseTo(16.6);
   });
 
-  it('should compute average FPS', () => {
-    const fps = clock.computeAverageFPS();
-    expect(fps).toBe(60);
+  it('should compute average FPS accurately without bias', () => {
+    expect(clock.computeAverageFPS()).toBe(0);
+    clock.delta = 16.666;
+    clock.tick(16.666);
+    expect(clock.computeAverageFPS()).toBeCloseTo(60, 0);
+  });
+
+  it('should clamp delta when maxDelta is specified', () => {
+    clock['now'] = 100;
+    const delta = clock.computeDelta(600, 100);
+    expect(delta).toBe(100);
   });
 
   it('should wrap around circular buffer when ticks exceed array length', () => {

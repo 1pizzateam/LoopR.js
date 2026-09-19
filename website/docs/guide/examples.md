@@ -102,3 +102,26 @@ const transition = new Player((delta) => {
 
 transition.start();
 ```
+
+---
+
+## Lag Spike Protection (Delta Clamping)
+
+When a browser tab loses focus or the main thread is blocked by heavy computation, elapsed delta time can spike to several seconds. In physics simulations, large delta values cause objects to pass through obstacles (tunneling) or accelerate uncontrollably.
+
+Use `player.capDelta(maxSeconds)` to enforce an upper bound on frame duration:
+
+```javascript
+import { Player } from '@1pizzateam/loopr';
+
+const player = new Player((delta) => {
+  // delta will never exceed 0.1 seconds (100ms), even after a 5-second tab freeze!
+  physics.update(delta);
+  render();
+});
+
+// Clamp maximum frame delta to 100ms (0.1s)
+player.capDelta(0.1);
+player.start();
+```
+

@@ -21,11 +21,12 @@ Import only the APIs you need:
 ```js
 import { Player, Clock } from '@1pizzateam/loopr';
 
-const player = new Player(() => {
-  console.log('Frame tick');
+const player = new Player((delta) => {
+  console.log(`Frame tick delta: ${delta}s`);
 });
 
 player.capFPS(60);
+player.capDelta(0.1); // clamp lag spikes to max 100ms
 player.start();
 ```
 

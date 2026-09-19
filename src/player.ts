@@ -10,11 +10,13 @@ export class Player {
   public frameId              : number;
   private callback            : PlayerCallback;
   private frameMinDuration    : number; // cap frame rate
+  private frameMaxDuration    : number; // cap maximum frame duration (lag spikes)
   private active              : boolean;
 
   constructor(callback: PlayerCallback) {
     this.frameId          = 0;
     this.frameMinDuration = 0;
+    this.frameMaxDuration = 0;
     this.clock            = new Clock();
     this.callback         = callback;
     this.active           = false;
@@ -23,6 +25,10 @@ export class Player {
 
   public capFPS(maxFPS: number): void {
     this.frameMinDuration = isNumber(maxFPS, true, '>=', 0) ? Time.fpsToMillisec(maxFPS) : this.frameMinDuration;
+  }
+
+  public capDelta(maxDeltaSec: number): void {
+    this.frameMaxDuration = isNumber(maxDeltaSec, true, '>=', 0) ? Time.secToMillisec(maxDeltaSec) : this.frameMaxDuration;
   }
 
   // get duration of the current frame in seconds
@@ -54,36 +60,31 @@ export class Player {
   }
 
   public start(): boolean {
-    if (!this.active) {
-      this.startAnimation();
-      return true;
-    }
-    return false;
+    if (this.active) return false;
+    this.startAnimation();
+    return true;
   }
 
   public toggle(): boolean {
-    if (this.start())
-      return true;
+    if (this.start()) return true;
     this.pause();
     return false;
   }
 
   public pause(): boolean {
-    if (this.active) {
-      this.stopAnimation();
-      return true;
-    }
-    return false;
+    if (!this.active) return false;
+    this.stopAnimation();
+    return true;
   }
 
   public stop(): void {
     this.clock.reset();
-    if (this.active)
-      this.stopAnimation();
+    if (this.active) this.stopAnimation();
   }
 
   private computeNewFrame(now: number): void {
-    const delta = this.clock.computeDelta(now);
+    if (!this.active) return;
+    const delta = this.clock.computeDelta(now, this.frameMaxDuration);
     if (!this.frameMinDuration || delta >= this.frameMinDuration) {
       this.clock.tick(now);
       if (this.callback(this.getTick()) === false) {
@@ -107,25 +108,17 @@ export class Player {
   }
 
   private requestNewFrame(): void {
-    const raf = typeof window !== 'undefined' && window.requestAnimationFrame
-      ? window.requestAnimationFrame.bind(window)
-      : typeof requestAnimationFrame !== 'undefined'
-        ? requestAnimationFrame
-        : null;
-
-    if (raf)
-      this.frameId = raf(this.computeNewFrame);
+    if (typeof window !== 'undefined' && window.requestAnimationFrame)
+      this.frameId = window.requestAnimationFrame(this.computeNewFrame);
+    else if (typeof requestAnimationFrame !== 'undefined')
+      this.frameId = requestAnimationFrame(this.computeNewFrame);
   }
 
   private cancelFrame(): void {
-    const caf = typeof window !== 'undefined' && window.cancelAnimationFrame
-      ? window.cancelAnimationFrame.bind(window)
-      : typeof cancelAnimationFrame !== 'undefined'
-        ? cancelAnimationFrame
-        : null;
-
-    if (caf)
-      caf(this.frameId);
+    if (typeof window !== 'undefined' && window.cancelAnimationFrame)
+      window.cancelAnimationFrame(this.frameId);
+    else if (typeof cancelAnimationFrame !== 'undefined')
+      cancelAnimationFrame(this.frameId);
   }
 
 }

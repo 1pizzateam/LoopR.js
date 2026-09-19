@@ -1,13 +1,12 @@
-import { Time, NumArray } from '@1pizzateam/spock';
+import { Time, RollingAverage } from '@1pizzateam/spock';
 
 export class Clock {
 
-  public ticks            : number = 0;
-  public total            : number = 0;
-  public delta            : number = 0;
-  private now             : number = 0;
-  private fpsArrayLength  : number = 60;
-  private fpsArray        : Array<number> = Array(this.fpsArrayLength);
+  public ticks       : number = 0;
+  public total       : number = 0;
+  public delta       : number = 0;
+  private now        : number = 0;
+  private rollingFps : RollingAverage = new RollingAverage(60);
 
   constructor() {
     this.reset();
@@ -18,27 +17,28 @@ export class Clock {
     this.total = 0;
     this.delta = 0;
     this.ticks = 0;
-    this.fpsArray.fill(60);
+    this.rollingFps.reset();
   }
 
   public start(): void {
-    this.now = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    this.now = Time.now();
   }
 
   public tick(now: number): void {
     this.now = now;
     this.total += this.delta;
-    this.fpsArray[this.ticks % this.fpsArrayLength] = Time.millisecToFps(this.delta);
+    this.rollingFps.push(Time.millisecToFps(this.delta));
     this.ticks++;
   }
 
-  public computeDelta(now: number): number {
+  public computeDelta(now: number, maxDelta: number = 0): number {
     this.delta = now - this.now;
+    if (maxDelta > 0) this.delta = Time.clampDelta(this.delta, maxDelta);
     return this.delta;
   }
 
   public computeAverageFPS(): number {
-    return NumArray.average(this.fpsArray);
+    return this.rollingFps.average;
   }
 
 }

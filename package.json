@@ -1,6 +1,6 @@
 {
   "name": "@1pizzateam/loopr",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Lightweight animation loop manager with FPS capping and delta-time clock",
   "keywords": [
     "animation",
@@ -57,7 +57,7 @@
   },
   "dependencies": {
     "@dwtechs/checkard": "3.7.0",
-    "@1pizzateam/spock": "4.0.0"
+    "@1pizzateam/spock": "4.1.0"
   },
   "devDependencies": {
     "@types/jest": "29.5.14",

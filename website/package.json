@@ -1,6 +1,6 @@
 {
   "name": "loopr-docs",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Documentation for LoopR.js.",
   "private": true,
   "scripts": {
@@ -20,7 +20,7 @@
     "vitepress": "1.6.4"
   },
   "dependencies": {
-    "@1pizzateam/spock": "4.0.0",
+    "@1pizzateam/spock": "4.1.0",
     "@dwtechs/checkard": "3.7.0"
   }
 }

@@ -33,7 +33,7 @@ describe('Player', () => {
     expect(player.getTicks()).toBe(0);
     expect(player.getTime()).toBe(0);
     expect(player.getTick()).toBe(0);
-    expect(player.getFPS()).toBe(60);
+    expect(player.getFPS()).toBe(0);
   });
 
   it('should start animation', () => {
@@ -146,6 +146,13 @@ describe('Player', () => {
     player.capFPS(60);
     player.capFPS(-30);
     expect(player['frameMinDuration']).toBeCloseTo(16.666, 1);
+  });
+
+  it('should cap delta time with capDelta', () => {
+    player.capDelta(0.1);
+    expect(player['frameMaxDuration']).toBe(100);
+    player.capDelta(-1);
+    expect(player['frameMaxDuration']).toBe(100);
   });
 
   it('should reset frameId to 0 when stopped', () => {

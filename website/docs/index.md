@@ -19,13 +19,13 @@ features:
     details: Cleanly manage and orchestrate your render loops without repetitive boilerplate.
   - icon: ⏱️
     title: High Precision Clock
-    details: Built-in clock provides accurate delta time, total time, and FPS calculation.
+    details: Built-in clock provides accurate delta time, total time, and running average FPS.
   - icon: 🛑
-    title: Frame Capping
-    details: Cap maximum FPS if you don't need the browser's maximum refresh rate.
+    title: Frame Capping & Delta Clamping
+    details: Cap maximum FPS or clamp maximum delta duration to shield simulations against lag spikes.
   - icon: 🧩
     title: Modular Design
-    details: Use the Player or import the Clock independently for your own use cases.
+    details: Use the Player or import the Clock independently for your own animation loops.
 ---
 
 ```js
