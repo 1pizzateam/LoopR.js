@@ -6,6 +6,7 @@ import ControlsDemo from './components/ControlsDemo.vue';
 import DeltaMotionDemo from './components/DeltaMotionDemo.vue';
 import SelfStoppingDemo from './components/SelfStoppingDemo.vue';
 import DeltaClampDemo from './components/DeltaClampDemo.vue';
+import AnimationLoopDemo from './components/AnimationLoopDemo.vue';
 import './demo.css';
 
 export default {
@@ -23,5 +24,6 @@ export default {
     app.component('DeltaMotionDemo', DeltaMotionDemo);
     app.component('SelfStoppingDemo', SelfStoppingDemo);
     app.component('DeltaClampDemo', DeltaClampDemo);
+    app.component('AnimationLoopDemo', AnimationLoopDemo);
   },
 };

@@ -28,12 +28,14 @@ features:
     details: Use the Player or import the Clock independently for your own animation loops.
 ---
 
+<AnimationLoopDemo />
+
 ```js
 import { Player } from '@1pizzateam/loopr';
 import { Vec2 } from '@1pizzateam/spock';
 
 const position = new Vec2(0, 100);
-const speed = 50; // move 50 pixels per second
+const speed = 100; // move 100 pixels per second
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
