@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Player } from '@1pizzateam/loopr';
+import { Trigo, Utils } from '@1pizzateam/spock';
 
 const canvasRef = ref(null);
 const playbackStatus = ref('running'); // 'running' | 'paused' | 'stopped'
@@ -34,7 +35,7 @@ function drawScene(x, elapsed = 0) {
   ctx.stroke();
 
   // Pulse effect
-  const pulse = 16 + Math.sin(elapsed * 6) * 4;
+  const pulse = 16 + Trigo.sine(elapsed * 6) * 4;
 
   ctx.beginPath();
   ctx.arc(x, h / 2, pulse, 0, Math.PI * 2);
@@ -106,13 +107,14 @@ onMounted(() => {
     const speed = 180; // px/s
 
     posX += direction * speed * delta;
-    if (posX > w - margin) {
+    if (posX >= w - margin) {
       posX = w - margin;
       direction = -1;
-    } else if (posX < margin) {
+    } else if (posX <= margin) {
       posX = margin;
       direction = 1;
     }
+    posX = Utils.clamp(posX, margin, w - margin);
 
     drawScene(posX, player.getTime());
 

@@ -5,6 +5,7 @@ import FpsCapDemo from './components/FpsCapDemo.vue';
 import ControlsDemo from './components/ControlsDemo.vue';
 import DeltaMotionDemo from './components/DeltaMotionDemo.vue';
 import SelfStoppingDemo from './components/SelfStoppingDemo.vue';
+import DeltaClampDemo from './components/DeltaClampDemo.vue';
 import './demo.css';
 
 export default {
@@ -21,5 +22,6 @@ export default {
     app.component('ControlsDemo', ControlsDemo);
     app.component('DeltaMotionDemo', DeltaMotionDemo);
     app.component('SelfStoppingDemo', SelfStoppingDemo);
+    app.component('DeltaClampDemo', DeltaClampDemo);
   },
 };

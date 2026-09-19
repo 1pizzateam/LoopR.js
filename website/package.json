@@ -21,6 +21,6 @@
   },
   "dependencies": {
     "@1pizzateam/spock": "4.1.0",
-    "@dwtechs/checkard": "3.7.0"
+    "@1pizzateam/loopr": "2.1.0"
   }
 }

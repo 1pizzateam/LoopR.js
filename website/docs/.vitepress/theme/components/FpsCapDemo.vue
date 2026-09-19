@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Player } from '@1pizzateam/loopr';
+import { Vec2, Trigo, Utils } from '@1pizzateam/spock';
 
 const canvasRef = ref(null);
 const currentCap = ref(30);
@@ -12,6 +13,8 @@ let player = null;
 let angle = 0;
 let bounceY = 0;
 let bounceDirection = 1;
+const center = new Vec2();
+const satPos = new Vec2();
 
 const caps = [
   { label: '15 FPS', value: 15 },
@@ -46,15 +49,19 @@ onMounted(() => {
     const rect = canvas.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;
-    const cx = w / 2;
-    const cy = h / 2;
+    center.setScalar(w / 2, h / 2);
     const isDark = document.documentElement.classList.contains('dark');
 
     // Update motion with delta
     angle += delta * 2.5; // ~2.5 rad/s
     bounceY += bounceDirection * delta * 80;
-    if (bounceY > 40) bounceDirection = -1;
-    if (bounceY < -40) bounceDirection = 1;
+    if (bounceY > 40) {
+      bounceY = 40;
+      bounceDirection = -1;
+    } else if (bounceY < -40) {
+      bounceY = -40;
+      bounceDirection = 1;
+    }
 
     // Clear
     ctx.clearRect(0, 0, w, h);
@@ -63,27 +70,29 @@ onMounted(() => {
     ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.arc(cx, cy, 70, 0, Math.PI * 2);
-    ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+    ctx.arc(center.x, center.y, 70, 0, Math.PI * 2);
+    ctx.arc(center.x, center.y, 40, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Draw orbiting satellites
+    // Draw orbiting satellites using Spock Trigo and Vec2
     const orbitR = 70;
     const satCount = 4;
     for (let i = 0; i < satCount; i++) {
       const a = angle + (i * Math.PI * 2) / satCount;
-      const sx = cx + Math.cos(a) * orbitR;
-      const sy = cy + Math.sin(a) * orbitR;
+      satPos.setScalar(
+        center.x + Trigo.cosine(a) * orbitR,
+        center.y + Trigo.sine(a) * orbitR
+      );
 
       ctx.beginPath();
-      ctx.arc(sx, sy, 8, 0, Math.PI * 2);
+      ctx.arc(satPos.x, satPos.y, 8, 0, Math.PI * 2);
       ctx.fillStyle = i === 0 ? '#ff9f43' : '#5b8cff';
       ctx.fill();
     }
 
     // Draw bouncing central core
     ctx.beginPath();
-    ctx.arc(cx, cy + bounceY * 0.4, 20, 0, Math.PI * 2);
+    ctx.arc(center.x, center.y + bounceY * 0.4, 20, 0, Math.PI * 2);
     ctx.fillStyle = isDark ? '#ffffff' : '#333333';
     ctx.fill();
 

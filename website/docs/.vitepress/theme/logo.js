@@ -1,3 +1,5 @@
+import { Trigo, Vec2 } from '@1pizzateam/spock';
+
 function reducedMotion() {
   return typeof window !== 'undefined'
     && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
@@ -9,16 +11,15 @@ function reducedMotion() {
  */
 export function drawLogo(context, state, theme) {
   const { width, height } = state;
-  const cx = width * 0.5;
-  const cy = height * 0.5;
+  const center = new Vec2(width * 0.5, height * 0.5);
   const radius = Math.min(width, height) * 0.38;
 
   if (radius <= 0) return;
 
   const t = reducedMotion() ? 1.0 : state.time;
 
-  const centerX = cx;
-  const centerY = cy;
+  const centerX = center.x;
+  const centerY = center.y;
 
   // Outer ambient glow ring
   context.save();
@@ -36,10 +37,10 @@ export function drawLogo(context, state, theme) {
     const innerR = radius - (isMajor ? 10 : 5);
     const outerR = radius;
 
-    const x1 = centerX + Math.cos(angle) * innerR;
-    const y1 = centerY + Math.sin(angle) * innerR;
-    const x2 = centerX + Math.cos(angle) * outerR;
-    const y2 = centerY + Math.sin(angle) * outerR;
+    const x1 = centerX + Trigo.cosine(angle) * innerR;
+    const y1 = centerY + Trigo.sine(angle) * innerR;
+    const x2 = centerX + Trigo.cosine(angle) * outerR;
+    const y2 = centerY + Trigo.sine(angle) * outerR;
 
     context.beginPath();
     context.moveTo(x1, y1);
@@ -77,8 +78,8 @@ export function drawLogo(context, state, theme) {
 
     // Orbiting particle at the leading edge (in front according to rotation direction)
     const leadAngle = ring.speed >= 0 ? endAngle : startAngle;
-    const leadX = centerX + Math.cos(leadAngle) * ring.r;
-    const leadY = centerY + Math.sin(leadAngle) * ring.r;
+    const leadX = centerX + Trigo.cosine(leadAngle) * ring.r;
+    const leadY = centerY + Trigo.sine(leadAngle) * ring.r;
 
     context.beginPath();
     context.arc(leadX, leadY, ring.width + 1.5, 0, Math.PI * 2);
@@ -95,7 +96,7 @@ export function drawLogo(context, state, theme) {
   });
 
   // Center pulsating clock core
-  const pulse = Math.sin(t * 3) * 0.15 + 1.0;
+  const pulse = Trigo.sine(t * 3) * 0.15 + 1.0;
   const coreRadius = radius * 0.16 * pulse;
 
   const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, coreRadius * 1.5);

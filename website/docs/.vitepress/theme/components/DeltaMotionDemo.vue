@@ -1,15 +1,16 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Player } from '@1pizzateam/loopr';
+import { Vec2 } from '@1pizzateam/spock';
 
 const canvasRef = ref(null);
 const isThrottled = ref(false);
 const fpsDisplay = ref(60);
 
 let player = null;
-let fixedX = 50;
-let deltaX = 50;
-const speedPxPerSec = 140;
+const fixedPos = new Vec2(50, 0);
+const deltaPos = new Vec2(50, 0);
+const velocity = new Vec2(140, 0);
 
 function toggleThrottle() {
   isThrottled.value = !isThrottled.value;
@@ -19,8 +20,8 @@ function toggleThrottle() {
 }
 
 function resetRunners() {
-  fixedX = 50;
-  deltaX = 50;
+  fixedPos.x = 50;
+  deltaPos.x = 50;
 }
 
 onMounted(() => {
@@ -46,12 +47,12 @@ onMounted(() => {
     const laneWidth = w - 100;
 
     // Fixed step (assumes fixed 60 FPS, adds speed / 60 each frame)
-    fixedX += (speedPxPerSec / 60);
-    if (fixedX > w - 50) fixedX = 50;
+    fixedPos.x += (velocity.x / 60);
+    if (fixedPos.x > w - 50) fixedPos.x = 50;
 
-    // Delta step (true time-based calculation)
-    deltaX += speedPxPerSec * delta;
-    if (deltaX > w - 50) deltaX = 50;
+    // Delta step (true time-based calculation using LoopR delta)
+    deltaPos.x += velocity.x * delta;
+    if (deltaPos.x > w - 50) deltaPos.x = 50;
 
     // Clear
     ctx.clearRect(0, 0, w, h);
@@ -80,13 +81,13 @@ onMounted(() => {
 
     // Runner 1 (Fixed)
     ctx.beginPath();
-    ctx.arc(fixedX, lane1Y, 12, 0, Math.PI * 2);
+    ctx.arc(fixedPos.x, lane1Y, 12, 0, Math.PI * 2);
     ctx.fillStyle = '#ff9f43';
     ctx.fill();
 
     // Runner 2 (Delta)
     ctx.beginPath();
-    ctx.arc(deltaX, lane2Y, 12, 0, Math.PI * 2);
+    ctx.arc(deltaPos.x, lane2Y, 12, 0, Math.PI * 2);
     ctx.fillStyle = '#38c793';
     ctx.fill();
 

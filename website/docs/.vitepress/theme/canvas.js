@@ -19,13 +19,22 @@ export function palette() {
 }
 
 /**
- * Run draw() through FrameRat with a device-pixel-ratio aware context.
- * The Player clock preserves animation speed while capFPS limits redraw work.
- * Returns a teardown function.
+ * Run draw() through LoopR with a device-pixel-ratio aware context.
+ * The Player clock preserves animation speed, computes delta time and rolling FPS,
+ * while capFPS limits redraw work and capDelta clamps lag spikes.
+ * Returns a teardown function with the active Player instance attached.
  */
-export function startCanvas(canvas, draw, { fps = CANVAS_FPS_CAP } = {}) {
+export function startCanvas(canvas, draw, { fps = CANVAS_FPS_CAP, maxDelta = 0.1 } = {}) {
   const context = canvas.getContext('2d');
-  const state = { width: 0, height: 0, time: 0, pointer: null };
+  const state = {
+    width: 0,
+    height: 0,
+    time: 0,
+    delta: 0,
+    fps: 0,
+    ticks: 0,
+    pointer: null,
+  };
 
   function resize() {
     const ratio = window.devicePixelRatio || 1;
@@ -46,12 +55,17 @@ export function startCanvas(canvas, draw, { fps = CANVAS_FPS_CAP } = {}) {
     state.pointer = null;
   }
 
-  const animation = new Player(() => {
+  const animation = new Player((delta) => {
+    state.delta = delta ?? animation.getTick();
     state.time = animation.getTime();
+    state.fps = animation.getFPS();
+    state.ticks = animation.getTicks();
     context.clearRect(0, 0, state.width, state.height);
     draw(context, state, palette());
   });
+
   if (fps) animation.capFPS(fps);
+  if (maxDelta) animation.capDelta(maxDelta);
 
   const resizeObserver = new ResizeObserver(resize);
   resizeObserver.observe(canvas);
@@ -66,13 +80,16 @@ export function startCanvas(canvas, draw, { fps = CANVAS_FPS_CAP } = {}) {
   resize();
   animation.start();
 
-  return () => {
+  const teardown = () => {
     animation.stop();
     resizeObserver.disconnect();
     visibilityObserver.disconnect();
     canvas.removeEventListener('pointermove', movePointer);
     canvas.removeEventListener('pointerleave', clearPointer);
   };
+  teardown.player = animation;
+
+  return teardown;
 }
 
 /** Stroke a polyline through the given [x, y] pairs. */

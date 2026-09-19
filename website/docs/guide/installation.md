@@ -36,7 +36,7 @@ LoopR.js has no CommonJS or IIFE build. Browser projects should load it through 
 <script type="module">
   import { Player } from './node_modules/@1pizzateam/loopr/dist/loopr.js';
 
-  const player = new Player(() => {
+  const player = new Player((delta) => {
     // render logic
   });
   player.start();

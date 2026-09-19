@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Player } from '@1pizzateam/loopr';
+import { Utils } from '@1pizzateam/spock';
 
 const canvasRef = ref(null);
 const progressPercent = ref(0);
@@ -25,7 +26,7 @@ function restart() {
   const ctx = canvas.getContext('2d');
 
   player = new Player((delta = 0) => {
-    progress += delta / totalDuration;
+    progress = Utils.clamp(progress + delta / totalDuration, 0, 1.0);
     const rect = canvas.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;
@@ -34,13 +35,8 @@ function restart() {
     const radius = Math.min(w, h) * 0.35;
     const isDark = document.documentElement.classList.contains('dark');
 
-    // Clamp and check stop condition
-    let shouldStop = false;
-    if (progress >= 1.0) {
-      progress = 1.0;
-      shouldStop = true;
-    }
-
+    // Check stop condition
+    const shouldStop = progress >= 1.0;
     progressPercent.value = Math.round(progress * 100);
 
     // Clear

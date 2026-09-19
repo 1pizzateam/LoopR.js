@@ -30,22 +30,24 @@ features:
 
 ```js
 import { Player } from '@1pizzateam/loopr';
+import { Vec2 } from '@1pizzateam/spock';
 
-let x = 0;
+const position = new Vec2(0, 100);
+const speed = 50; // move 50 pixels per second
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
-const animation = new Player(() => {
+const animation = new Player((delta) => {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
   // Update state using delta time
-  x += 50 * animation.getTick(); // move 50 pixels per second
-  if (x > canvas.width) x = 0;
+  position.x += speed * delta;
+  if (position.x > canvas.width) position.x = 0;
   
   // Render
   ctx.fillStyle = '#5b8cff';
-  ctx.fillRect(x, 100, 50, 50);
+  ctx.fillRect(position.x, position.y, 50, 50);
 });
 
 // Optional: cap at 30 FPS
