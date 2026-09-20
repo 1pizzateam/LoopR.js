@@ -1,6 +1,5 @@
 <script setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
-import { withBase } from 'vitepress';
 import { Rand, Trigo, Utils, Vec2 } from '@1pizzateam/spock';
 import { startCanvas } from '../canvas.js';
 
@@ -432,31 +431,6 @@ onBeforeUnmount(() => {
         <span>x: {{ Math.round(posX) }}px</span>
       </div>
     </div>
-
-    <p class="loop-more">
-      <a
-        class="loop-icon"
-        :href="withBase('/guide/examples')"
-        aria-label="More demos"
-        title="More demos"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <line x1="4" y1="12" x2="19" y2="12" />
-          <polyline points="13 6 19 12 13 18" />
-        </svg>
-      </a>
-    </p>
   </section>
 </template>
 
@@ -534,8 +508,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 1px 4px rgba(91, 140, 255, 0.4);
 }
 
-.loop-circle-btn,
-.loop-icon {
+.loop-circle-btn {
   display: inline-flex;
   flex: none;
   align-items: center;
@@ -554,15 +527,13 @@ onBeforeUnmount(() => {
     color 0.2s;
 }
 
-.loop-circle-btn:hover,
-.loop-icon:hover {
+.loop-circle-btn:hover {
   border-color: var(--vp-c-brand-1);
   background: var(--vp-c-bg-alt);
   color: var(--vp-c-brand-1);
 }
 
 .loop-circle-btn:focus-visible,
-.loop-icon:focus-visible,
 .loop-pill-btn:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 2px;
@@ -578,6 +549,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
+/* Height increased for spacious viewing */
 .loop-canvas canvas {
   display: block;
   width: 100%;
@@ -599,21 +571,6 @@ onBeforeUnmount(() => {
   font-size: 12px;
   pointer-events: none;
   backdrop-filter: blur(8px);
-}
-
-.loop-more {
-  margin: 16px 0 0;
-  text-align: right;
-}
-
-.loop-more a {
-  color: var(--vp-c-brand-1);
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.loop-more a:hover {
-  color: var(--vp-c-brand-2);
 }
 
 @media (max-width: 640px) {
