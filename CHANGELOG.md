@@ -1,3 +1,15 @@
+Version 2.2.0 (October 25th 2026)
+-----------------------------
+ * Quality:
+    * Added `Quality` adaptive resolution and quality scaler (`Quality`, `SCALES`, `QualityOptions`) built on `RollingAverage` and `Utils.clamp` from `@1pizzateam/spock`
+    * Drops scale quickly on sustained slow frames, ignores isolated stalls, rises slowly after sustained fast frames, and locks out levels that fail right after rising
+ * Player:
+    * Delegated jitter tolerance clamping in `capFPS()` to `Utils.clamp()` from `@1pizzateam/spock`
+ * Exports:
+    * Re-exported `Time`, `Accumulator`, and `RollingAverage` from `@1pizzateam/spock` at the root entrypoint
+ * Dependencies:
+    * Upgraded `@1pizzateam/spock` to version 4.5.0
+
 Version 2.1.0 (September 19th 2026)
 -----------------------------
  * Clock:

@@ -10,6 +10,7 @@ const docsRoot = path.resolve(root, 'website/docs/api');
 const modules = [
   ['Player', 'player.ts', 'player.md'],
   ['Clock', 'clock.ts', 'clock.md'],
+  ['Quality', 'quality.ts', 'quality.md'],
 ];
 
 const intros = {
@@ -35,6 +36,14 @@ const intros = {
         ],
         returns: '`void`',
         example: `import { Player } from '@1pizzateam/loopr';\n\nconst player = new Player(() => {\n  render();\n});\n\n// Cap animation to 30 FPS to save battery or CPU\nplayer.capFPS(30);\nplayer.start();\n\n// Later, uncap to run at full display refresh rate\nplayer.capFPS(0);`,
+      },
+      capDelta: {
+        description: 'Clamp the maximum frame duration (in seconds) passed to the callback to protect against lag spikes and tab switching.',
+        params: [
+          '- `maxDeltaSec` — `number`. Maximum allowed duration in seconds (e.g. `0.1` for 100ms). Pass `0` to remove the clamp.',
+        ],
+        returns: '`void`',
+        example: `import { Player } from '@1pizzateam/loopr';\n\nconst player = new Player((delta) => {\n  physics.update(delta);\n});\n\n// Clamp maximum delta to 100ms (0.1s) to prevent physics tunneling during lag spikes\nplayer.capDelta(0.1);\nplayer.start();`,
       },
       getTick: {
         description: 'Get the duration of the current frame in seconds.',
@@ -133,6 +142,36 @@ const intros = {
         description: 'Calculate the moving average frames per second from the internal 60-frame buffer.',
         returns: '`number` — Moving average FPS.',
         example: `import { Clock } from '@1pizzateam/loopr';\n\nconst clock = new Clock();\nclock.start();\n\nfunction loop(timestamp) {\n  clock.computeDelta(timestamp);\n  clock.tick(timestamp);\n  const fps = clock.computeAverageFPS();\n  fpsElement.textContent = \`FPS: \${Math.round(fps)}\`;\n  requestAnimationFrame(loop);\n}\n\nrequestAnimationFrame(loop);`,
+      },
+    },
+  },
+  Quality: {
+    summary: 'Adaptive resolution and quality scaler built on RollingAverage and Utils.clamp.',
+    body: [
+      '`Quality` monitors frame delta times across a rolling window, drops the resolution scale quickly when sustained slow frames occur, ignores isolated tab/GC stalls, rises gradually after sustained fast frames, and permanently locks out (`ceiling`) quality levels that immediately fail after rising.',
+    ],
+    example: `import { Player, Quality } from '@1pizzateam/loopr';\n\nconst quality = new Quality();\n\nconst player = new Player((delta) => {\n  const newScale = quality.update(delta);\n  if (newScale !== null)\n    renderer.setResolutionScale(newScale);\n\n  renderer.render();\n});\n\nplayer.start();`,
+    members: {
+      constructor: {
+        description: 'Create a new `Quality` scaler with optional thresholds and scale levels.',
+        params: [
+          '- `options` — `QualityOptions` (optional). Configuration overrides for `scales`, `windowSize`, `slowThreshold`, `fastThreshold`, `riseAfter`, `failedWithin`, and `ignoreAbove`.',
+        ],
+        returns: 'A new `Quality` instance initialized at `level = 0` (`scale = scales[0]`).',
+        example: `import { Quality } from '@1pizzateam/loopr';\n\nconst quality = new Quality({\n  scales: [1, 0.75, 0.5],\n  windowSize: 60,\n});`,
+      },
+      reset: {
+        description: 'Reset the quality scaler back to its highest quality level (`level = 0`, `ceiling = 0`) and clear the rolling frame window and timers.',
+        returns: '`void`',
+        example: `import { Quality } from '@1pizzateam/loopr';\n\nconst quality = new Quality();\nquality.reset();\nconsole.log(quality.scale); // 1`,
+      },
+      update: {
+        description: 'Feed one frame\'s delta time in seconds. Evaluates the rolling average every `windowSize` valid frames and returns the new scale whenever the quality level changes, or `null` when unchanged.',
+        params: [
+          '- `dt` — `number`. Elapsed frame delta time in seconds.',
+        ],
+        returns: '`number | null` — The new resolution scale when the quality level stepped up or down, otherwise `null`.',
+        example: `import { Player, Quality } from '@1pizzateam/loopr';\n\nconst quality = new Quality();\nconst player = new Player((delta) => {\n  const nextScale = quality.update(delta);\n  if (nextScale !== null)\n    resizeRenderTarget(nextScale);\n});\nplayer.start();`,
       },
     },
   },

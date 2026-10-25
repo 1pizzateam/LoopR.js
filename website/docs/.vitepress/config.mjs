@@ -62,6 +62,7 @@ export default defineConfig({
         items: [
           { text: 'Player', link: '/api/player' },
           { text: 'Clock', link: '/api/clock' },
+          { text: 'Quality', link: '/api/quality' },
         ],
       },
     ],

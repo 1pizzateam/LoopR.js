@@ -1,4 +1,4 @@
-import { Time } from '@1pizzateam/spock';
+import { Time, Utils } from '@1pizzateam/spock';
 import { isNumber } from '@dwtechs/checkard';
 import { Clock } from './clock';
 
@@ -26,10 +26,9 @@ export class Player {
   }
 
   public capFPS(maxFPS: number): void {
-    if (isNumber(maxFPS, true, '>=', 0)) {
-      this.frameMinDuration = Time.fpsToMillisec(maxFPS);
-      this.frameTolerance   = this.frameMinDuration ? Math.min(4, this.frameMinDuration * 0.2) : 0;
-    }
+    if (!isNumber(maxFPS, true, '>=', 0)) return;
+    this.frameMinDuration = Time.fpsToMillisec(maxFPS);
+    this.frameTolerance   = this.frameMinDuration ? Utils.clamp(this.frameMinDuration * 0.2, 0, 4) : 0;
   }
 
   public capDelta(maxDeltaSec: number): void {

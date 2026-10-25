@@ -23,9 +23,12 @@ features:
   - icon: 🛑
     title: Frame Capping & Delta Clamping
     details: Cap maximum FPS or clamp maximum delta duration to shield simulations against lag spikes.
+  - icon: 📐
+    title: Adaptive Quality Scaling
+    details: Built-in Quality scaler drops resolution on sustained slow frames, ignores isolated stalls, and locks out unstable levels.
   - icon: 🧩
     title: Modular Design
-    details: Use the Player or import the Clock independently for your own animation loops.
+    details: Use Player, Clock, Quality, or re-exported Spock timing primitives (Time, Accumulator, RollingAverage) independently.
 ---
 
 <AnimationLoopDemo />
